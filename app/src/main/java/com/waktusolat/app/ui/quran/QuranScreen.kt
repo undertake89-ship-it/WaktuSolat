@@ -37,24 +37,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.waktusolat.app.data.local.AppDatabase
 import com.waktusolat.app.data.repository.QuranRepository
 import com.waktusolat.app.domain.model.Surah
+
+class QuranViewModelFactory(private val context: android.content.Context) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return QuranViewModel(QuranRepository(AppDatabase.getInstance(context).quranDao())) as T
+    }
+}
 
 @Composable
 fun QuranScreen(
     onSurahClick: (Int) -> Unit,
     viewModel: QuranViewModel = viewModel(
         key = "quran",
-        factory = object : androidx.lifecycle.ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return QuranViewModel(QuranRepository(AppDatabase.getInstance(
-                    androidx.compose.ui.platform.LocalContext.current
-                ).quranDao())) as T
-            }
-        }
+        factory = QuranViewModelFactory(
+            androidx.compose.ui.platform.LocalContext.current
+        )
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()

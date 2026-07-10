@@ -57,8 +57,11 @@ private fun QiblaCompass(qiblaBearing: Float, deviceAzimuth: Float, isAccurate: 
     val animatedRotation by animateFloatAsState(targetValue = -deviceAzimuth, animationSpec = tween(300), label = "rotation")
     val diff = (qiblaBearing - deviceAzimuth + 360) % 360
 
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
+
     Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Text("Arah Kiblat", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+        Text("Arah Kiblat", style = MaterialTheme.typography.headlineMedium, color = primaryColor, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(24.dp))
 
         Box(Modifier.size(300.dp), contentAlignment = Alignment.Center) {
@@ -72,7 +75,7 @@ private fun QiblaCompass(qiblaBearing: Float, deviceAzimuth: Float, isAccurate: 
                         val rad = Math.toRadians(i.toDouble()).toFloat()
                         val outer = Offset(cx + r * cos(rad), cy + r * sin(rad))
                         val inner = Offset(cx + (r - size.width / 30) * cos(rad), cy + (r - size.width / 30) * sin(rad))
-                        drawLine(if (i % 90 == 0) MaterialTheme.colorScheme.primary else Color.Gray, outer, inner, strokeWidth = if (i % 90 == 0) 4f else 2f)
+                        drawLine(if (i % 90 == 0) primaryColor else Color.Gray, outer, inner, strokeWidth = if (i % 90 == 0) 4f else 2f)
                     }
                     val aRad = Math.toRadians(diff.toDouble()).toFloat()
                     val aLen = r * 0.7f
