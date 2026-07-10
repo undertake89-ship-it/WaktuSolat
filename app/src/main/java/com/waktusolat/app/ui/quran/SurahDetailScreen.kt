@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +68,7 @@ fun SurahDetailScreen(
     var playingAyat by remember { mutableIntStateOf(-1) }
     var isPaused by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
 
     LaunchedEffect(surahId) {
@@ -212,7 +214,9 @@ fun SurahDetailScreen(
                             }
                         },
                         onAyatViewed = {
-                            repository.updateLastRead(surahId, ayat.ayatNumber)
+                            coroutineScope.launch {
+                                repository.updateLastRead(surahId, ayat.ayatNumber)
+                            }
                         }
                     )
                 }

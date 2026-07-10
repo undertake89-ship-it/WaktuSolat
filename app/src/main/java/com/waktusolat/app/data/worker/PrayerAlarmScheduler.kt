@@ -14,7 +14,7 @@ object PrayerAlarmScheduler {
 
     fun schedulePrayerAlarms(context: Context, prayerTime: PrayerTime) {
         cancelAllAlarms(context)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
         val timeFields = listOf(
             prayerTime.subuh,
             prayerTime.syuruk,
@@ -46,41 +46,27 @@ object PrayerAlarmScheduler {
                     context,
                     1000 + i,
                     intent,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                    else
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
-                } else {
-                    alarmManager.setExact(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
-                }
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
             } catch (_: Exception) { }
         }
     }
 
     fun cancelAllAlarms(context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
         for (i in prayerNames.indices) {
             val intent = Intent(context, PrayerAlarmReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 1000 + i,
                 intent,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
-                else
-                    PendingIntent.FLAG_NO_CREATE
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
             )
             pendingIntent?.let {
                 alarmManager.cancel(it)

@@ -46,7 +46,7 @@ object AzanPlayer {
                     true
                 }
                 setOnCompletionListener {
-                    release()
+                    stop()
                 }
                 prepareAsync()
             }
@@ -56,7 +56,7 @@ object AzanPlayer {
     }
 
     private fun tryNextUrl(context: Context) {
-        release()
+        stop()
     }
 
     private fun vibrate(context: Context) {
