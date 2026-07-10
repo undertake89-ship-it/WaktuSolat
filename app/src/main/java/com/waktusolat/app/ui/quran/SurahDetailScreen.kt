@@ -53,6 +53,7 @@ import com.waktusolat.app.data.local.AppDatabase
 import com.waktusolat.app.data.repository.QuranRepository
 import com.waktusolat.app.domain.model.Ayat
 import com.waktusolat.app.domain.model.Surah
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
