@@ -49,10 +49,12 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(app)
         settingsDataStore = SettingsDataStore(app)
         viewModelScope.launch {
-            val savedZone = settingsDataStore.selectedZone.first()
-            if (savedZone.isNotBlank()) {
-                _uiState.value = _uiState.value.copy(selectedZone = savedZone)
-            }
+            try {
+                val savedZone = settingsDataStore.selectedZone.first()
+                if (savedZone.isNotBlank()) {
+                    _uiState.value = _uiState.value.copy(selectedZone = savedZone)
+                }
+            } catch (_: Exception) { }
         }
         loadPrayerTimes()
         startCountdownTimer()
@@ -104,8 +106,10 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
                     isLoading = false,
                     error = null
                 )
-                val app = getApplication<Application>()
-                PrayerAlarmScheduler.schedulePrayerAlarms(app, prayerTime)
+                try {
+                    val app = getApplication<Application>()
+                    PrayerAlarmScheduler.schedulePrayerAlarms(app, prayerTime)
+                } catch (_: Exception) { }
             },
             onFailure = { e ->
                 _uiState.value = _uiState.value.copy(
