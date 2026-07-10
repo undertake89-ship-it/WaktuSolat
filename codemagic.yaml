@@ -1,0 +1,26 @@
+workflows:
+  waktu-solat-build:
+    name: Waktu Solat Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      android: true
+      java: 17
+      vars:
+        GRADLE_VERSION: "8.2"
+    scripts:
+      - name: Setup Gradle Wrapper
+        script: |
+          if [ ! -f gradlew ]; then
+            gradle wrapper --gradle-version $GRADLE_VERSION
+          fi
+          chmod +x gradlew
+      - name: Build Debug APK
+        script: |
+          ./gradlew assembleDebug --stacktrace
+    artifacts:
+      - app/build/outputs/**/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - undertake89@gmail.com
