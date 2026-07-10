@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Waktu Solat</string>
+    <string name="tab_waktu_solat">Waktu Solat</string>
+    <string name="tab_kiblat">Kiblat</string>
+    <string name="tab_al_quran">Al-Quran</string>
+    <string name="subuh">Subuh</string>
+    <string name="syuruk">Syuruk</string>
+    <string name="zohor">Zohor</string>
+    <string name="asar">Asar</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isyak">Isyak</string>
+    <string name="loading">Memuatkan…</string>
+    <string name="error_message">Ralat berlaku. Sila cuba lagi.</string>
+    <string name="retry">Cuba Lagi</string>
+    <string name="location_permission_title">Kebenaran Lokasi Diperlukan</string>
+    <string name="location_permission_message">Aplikasi ini memerlukan akses lokasi untuk mendapatkan waktu solat dan arah kiblat yang tepat.</string>
+    <string name="grant">Benarkan</string>
+    <string name="deny">Tolak</string>
+    <string name="select_zone">Pilih Zon</string>
+    <string name="no_internet">Tiada sambungan internet</string>
+    <string name="next_prayer">Waktu seterusnya</string>
+    <string name="qibla_heading">Arah Kiblat</string>
+    <string name="calibrate_sensor">Kalibrasi sensor dengan menggerakkan peranti dalam bentuk angka 8</string>
+    <string name="accuracy_low">Ketepatan sensor rendah</string>
+    <string name="search_surah">Cari surah…</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="bookmarked">Telah dibookmark</string>
+    <string name="no_bookmark">Tiada bookmark</string>
+    <string name="surah_list">Senarai Surah</string>
+    <string name="ayat">Ayat</string>
+    <string name="play_audio">Mainkan audio</string>
+    <string name="pause_audio">Jeda audio</string>
+    <string name="offline_data">Data offline</string>
+</resources>
