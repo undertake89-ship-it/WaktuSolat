@@ -8,13 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.waktusolat.app.data.local.AppDatabase
+import com.waktusolat.app.data.preferences.SettingsDataStore
 import com.waktusolat.app.data.repository.PrayerTimeRepository
+import com.waktusolat.app.data.worker.PrayerAlarmScheduler
 import com.waktusolat.app.domain.model.NextPrayer
 import com.waktusolat.app.domain.model.PrayerTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -36,12 +39,21 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
 
     private val repository: PrayerTimeRepository
     private val fusedLocationClient: FusedLocationProviderClient
+    private val settingsDataStore: SettingsDataStore
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     init {
-        val db = AppDatabase.getInstance(application)
+        val app = getApplication<Application>()
+        val db = AppDatabase.getInstance(app)
         repository = PrayerTimeRepository(db.prayerTimeDao())
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(app)
+        settingsDataStore = SettingsDataStore(app)
+        viewModelScope.launch {
+            val savedZone = settingsDataStore.selectedZone.first()
+            if (savedZone.isNotBlank()) {
+                _uiState.value = _uiState.value.copy(selectedZone = savedZone)
+            }
+        }
         loadPrayerTimes()
         startCountdownTimer()
     }
@@ -92,6 +104,8 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
                     isLoading = false,
                     error = null
                 )
+                val app = getApplication<Application>()
+                PrayerAlarmScheduler.schedulePrayerAlarms(app, prayerTime)
             },
             onFailure = { e ->
                 _uiState.value = _uiState.value.copy(
@@ -129,6 +143,7 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
     fun loadByZone(zone: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null, selectedZone = zone)
+            settingsDataStore.setSelectedZone(zone)
             val result = repository.getPrayerTimesByCity(zone)
             handleResult(result)
         }

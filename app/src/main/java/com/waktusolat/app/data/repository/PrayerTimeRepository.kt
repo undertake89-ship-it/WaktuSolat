@@ -126,7 +126,13 @@ class PrayerTimeRepository(
             }
         }
 
-        return null
+        val tomorrowSubuh = prayerCalendars.firstOrNull()?.let { (name, cal) ->
+            cal.apply { add(Calendar.DAY_OF_MONTH, 1) }
+            Pair(name, cal)
+        }
+        return tomorrowSubuh?.let { (name, cal) ->
+            NextPrayer(name = name, time = timeMap[name] ?: "", remainingMillis = cal.timeInMillis - nowMillis)
+        }
     }
 
     fun getPrayerTimesForDate(date: String): Flow<PrayerTimeEntity?> {

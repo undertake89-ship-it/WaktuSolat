@@ -32,5 +32,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".data.worker.PrayerAlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.waktusolat.app.action.PRAYER_ALARM" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
